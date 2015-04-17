@@ -28,7 +28,7 @@ public class CollectableDoubleJump : GameBehaviour
 				collectedCounter++;
 			}
 		}
-        PlayerObj.GetComponent<CharacterController2D>().DoubleJumpEnabled = true;
+        PlayerObj.GetComponent<CharacterController2D>().AirJumpEnabled = true;
 
 	}
 }
