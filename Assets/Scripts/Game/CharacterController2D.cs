@@ -53,7 +53,7 @@ public class CharacterController2D : GameBehaviour {
         {
             transform.parent = dumbColliders[0].transform;
             // Reset Remaining Jumps
-            RemainingJumps = TotalJumps;
+            RemainingJumps = TotalJumps -1;
         }
         else
         {
