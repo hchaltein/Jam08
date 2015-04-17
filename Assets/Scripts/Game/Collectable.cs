@@ -68,7 +68,7 @@ public class Collectable : GameBehaviour {
 				container.SetActive(false);
 				if(Collected!=null)
 				{
-					Collected(this);
+                    Collected(this);
 				}
 
 			}
