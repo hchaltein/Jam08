@@ -23,8 +23,10 @@ public class CharacterController2D : GameBehaviour {
     Animator animator;
     bool isGrounded;
     bool isGripping;
-    bool hasDoubleJump;
-    public bool DoubleJumpEnabled;
+    bool canAirJump;
+    public int TotalJumps = 10;
+    public int RemainingJumps = 10;
+    public bool AirJumpEnabled = true;
 
     Vector3 checkpointPosition;
 
@@ -35,6 +37,7 @@ public class CharacterController2D : GameBehaviour {
         base.Awake();
 
         animator = GetComponent<Animator>();
+
     }
 
 	protected override void FixedUpdate () 
@@ -45,9 +48,12 @@ public class CharacterController2D : GameBehaviour {
 
         var wasGrounded = isGrounded;
         isGrounded = Physics2D.OverlapAreaNonAlloc(pos + feetA, pos + feetB, dumbColliders, groundLayers) > 0;
+        
         if(isGrounded)
         {
             transform.parent = dumbColliders[0].transform;
+            // Reset Remaining Jumps
+            RemainingJumps = TotalJumps;
         }
         else
         {
@@ -59,9 +65,9 @@ public class CharacterController2D : GameBehaviour {
         var isGrippingRight = Physics2D.OverlapAreaNonAlloc(pos + handA, pos + handB, dumbColliders, groundLayers) > 0;
         var isGrippingLeft = Physics2D.OverlapAreaNonAlloc(pos + Vector2.Scale(handA, mirror), pos + Vector2.Scale(handB, mirror), dumbColliders, groundLayers) > 0;
 
-        if (isGrounded && DoubleJumpEnabled)
+        if (isGrounded || RemainingJumps > 0)
         {
-            hasDoubleJump = true;
+            canAirJump = true;
         }
 
         var horizontal =  Input.GetAxis("Horizontal");
@@ -75,10 +81,6 @@ public class CharacterController2D : GameBehaviour {
             horizontal = Mathf.Clamp(horizontal, 0, float.PositiveInfinity);
         }
 
-        //var sign = Mathf.Sign(horizontal * transform.lossyScale.x);
-        //var scale = new Vector3(transform.localScale.x * sign, transform.localScale.y, transform.localScale.z);
-        //transform.localScale = scale;
-
         var sign = Mathf.Sign(horizontal);
 
         animator.SetBool("Mirror", sign < 0);
@@ -86,6 +88,7 @@ public class CharacterController2D : GameBehaviour {
         animator.SetBool("IsGrounded", isGrounded);
         animator.SetFloat("Vertical Speed", rigidbody2D.velocity.y);
         landSpeed = Mathf.Min(rigidbody2D.velocity.y, landSpeed);
+        
         if (isGrounded && !wasGrounded)
         {
             animator.SetFloat("Land Speed", landSpeed);
@@ -100,7 +103,6 @@ public class CharacterController2D : GameBehaviour {
     {
         base.Update();
 
-		//if (Input.GetKeyDown(KeyCode.LeftShift))
         if (Input.GetButtonDown("Fire1"))
         {
             transform.parent = null;
@@ -115,24 +117,22 @@ public class CharacterController2D : GameBehaviour {
 			World.ShiftTo(Dimensions.Green);
         }
 
-
-        if ((isGrounded || hasDoubleJump && DoubleJumpEnabled) && Input.GetKeyDown(KeyCode.Space))
-        //if (Input.GetButtonUp("Fire1"))
-        //{
-        //    transform.parent = null;
-        //    rigidbody2D.WakeUp();
-        //    World.ShiftTo(Dimensions.Green);
-        //}
-
-
-        if ((isGrounded || hasDoubleJump && DoubleJumpEnabled) && Input.GetButtonDown("Jump"))
+        
+        if ((isGrounded || canAirJump && AirJumpEnabled) && Input.GetButtonDown("Jump"))
         {
             if (!isGrounded)
             {
-                hasDoubleJump = false;
+                // Decreses amount of Air Jumps
+                RemainingJumps -= 1;
+                
+                // If player ran out of air Jumps,he can no longer jump
+                if(RemainingJumps <=0) canAirJump = false;
+                
+                // Air Jump Velocity
                 rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
             }
 
+            // Ground Jump Force
             rigidbody2D.AddForce(new Vector2(0, 700));
         }
 
@@ -179,7 +179,7 @@ public class CharacterController2D : GameBehaviour {
 		}
         if (behaviour.GetType() == typeof(CollectableDoubleJump))
         {
-            if (!DoubleJumpEnabled) DoubleJumpEnabled = true;
+            if (!AirJumpEnabled) AirJumpEnabled = true;
         }
     }
 
