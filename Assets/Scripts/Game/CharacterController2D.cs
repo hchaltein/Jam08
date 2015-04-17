@@ -24,8 +24,8 @@ public class CharacterController2D : GameBehaviour {
     bool isGrounded;
     bool isGripping;
     bool canAirJump;
-    public int TotalJumps = 10;
-    public int RemainingJumps = 10;
+    public int TotalJumps;
+    public int RemainingJumps;
     public bool AirJumpEnabled = true;
 
     Vector3 checkpointPosition;
@@ -37,6 +37,10 @@ public class CharacterController2D : GameBehaviour {
         base.Awake();
 
         animator = GetComponent<Animator>();
+
+        // Default Values
+        TotalJumps = 2;
+        RemainingJumps = TotalJumps - 1;
 
     }
 
@@ -53,7 +57,7 @@ public class CharacterController2D : GameBehaviour {
         {
             transform.parent = dumbColliders[0].transform;
             // Reset Remaining Jumps
-            RemainingJumps = TotalJumps;
+            RemainingJumps = TotalJumps -1;
         }
         else
         {
@@ -180,6 +184,15 @@ public class CharacterController2D : GameBehaviour {
         if (behaviour.GetType() == typeof(CollectableDoubleJump))
         {
             if (!AirJumpEnabled) AirJumpEnabled = true;
+        }
+
+        if (behaviour.GetType() == typeof(CollectableAddJump))
+        {
+            if (TotalJumps < 9)
+            {
+                TotalJumps += 1;
+                RemainingJumps += 1;
+            }
         }
     }
 

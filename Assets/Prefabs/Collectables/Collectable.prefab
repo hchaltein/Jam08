@@ -80,7 +80,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActiveDimensions: 2
-  CollectableDimensions: 2
   resetOnLoad: 1
 --- !u!1001 &100100000
 Prefab:
