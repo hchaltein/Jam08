@@ -4,7 +4,6 @@ using Assets.Scripts.Utils;
 
 public class CollectableAddJump : GameBehaviour
 {
-
     public GameObject PlayerObj;
     public Collectable[] collectables;
 
@@ -16,7 +15,6 @@ public class CollectableAddJump : GameBehaviour
 			collectable.Collected += OnCollect;
 		}
 	}
-
 	void OnCollect(Collectable collectable)
 	{
         // Makes player interact with collectable
@@ -30,6 +28,5 @@ public class CollectableAddJump : GameBehaviour
 				collectedCounter++;
 			}
 		}
-
 	}
 }
