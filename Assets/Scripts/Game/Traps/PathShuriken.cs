@@ -6,7 +6,7 @@ public class PathShuriken : GameBehaviour {
 
 	[EnumMask]
 	public Dimensions dimensionsToShow;
-	public Dimensions dimensionsToMove;
+    public Dimensions dimensionsToMove;
 	public bool resetWhenVisible;
 	public bool ignorePlayerPresence;
 	/*public GameObject[] hidenMeshes;*/

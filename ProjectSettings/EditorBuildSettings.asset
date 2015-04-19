@@ -16,9 +16,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/020 - Tutorial - Double Jumping.unity
   - enabled: 1
-    path: Assets/Scenes/Jam/030 - FinalLevel2.unity
+    path: Assets/Scenes/030 - FinalLevel2.unity
   - enabled: 1
-    path: Assets/Scenes/Jam/040 - FinalLevel3.unity
+    path: Assets/Scenes/040 - FinalLevel3.unity
   - enabled: 1
     path: Assets/Scenes/Levels/050 - FinalLevel4.unity
   - enabled: 1

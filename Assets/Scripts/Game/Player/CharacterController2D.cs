@@ -20,13 +20,16 @@ public class CharacterController2D : GameBehaviour {
     readonly Vector2 handA = new Vector2(.20f, .02f);
     readonly Vector2 handB = new Vector2(.26f, .48f);
 
-    Animator animator;
-    bool isGrounded;
-    bool isGripping;
     bool canAirJump;
     public int TotalJumps;
     public int RemainingJumps;
     public bool AirJumpEnabled = true;
+    
+  
+    Animator animator;
+    bool isGrounded;
+    bool isGripping;
+    float landSpeed;
 
     Vector3 checkpointPosition;
 
@@ -54,8 +57,6 @@ public class CharacterController2D : GameBehaviour {
         if(isGrounded)
         {
             transform.parent = dumbColliders[0].transform;
-            // Reset Remaining Jumps
-            RemainingJumps = TotalJumps -1;
         }
         else
         {
@@ -67,7 +68,7 @@ public class CharacterController2D : GameBehaviour {
         var isGrippingRight = Physics2D.OverlapAreaNonAlloc(pos + handA, pos + handB, dumbColliders, groundLayers) > 0;
         var isGrippingLeft = Physics2D.OverlapAreaNonAlloc(pos + Vector2.Scale(handA, mirror), pos + Vector2.Scale(handB, mirror), dumbColliders, groundLayers) > 0;
 
-        if (isGrounded || RemainingJumps > 0)
+        if (isGrounded && RemainingJumps > 0)
         {
             canAirJump = true;
         }
@@ -95,11 +96,17 @@ public class CharacterController2D : GameBehaviour {
         {
             animator.SetFloat("Land Speed", landSpeed);
             landSpeed = 0;
+
+            // Reset Remaining Jumps
+            RemainingJumps = TotalJumps;
+
         }
 
         rigidbody2D.velocity = new Vector2(horizontal * speed, rigidbody2D.velocity.y);
 	}
-    float landSpeed;
+
+
+    
 
     protected override void Update()
     {
@@ -123,12 +130,9 @@ public class CharacterController2D : GameBehaviour {
         if ((isGrounded || canAirJump && AirJumpEnabled) && Input.GetButtonDown("Jump"))
         {
             if (!isGrounded)
-            {
-                // Decreses amount of Air Jumps
-                RemainingJumps -= 1;
-                
+            {   
                 // If player ran out of air Jumps,he can no longer jump
-                if(RemainingJumps <=0) canAirJump = false;
+                if(RemainingJumps <=1) canAirJump = false;
                 
                 // Air Jump Velocity
                 rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
@@ -136,6 +140,8 @@ public class CharacterController2D : GameBehaviour {
 
             // Ground Jump Force
             rigidbody2D.AddForce(new Vector2(0, 700));
+            // Decreses amount of Air Jumps
+            RemainingJumps -= 1;
         }
 
 
@@ -194,6 +200,9 @@ public class CharacterController2D : GameBehaviour {
                 TotalJumps += 1;
                 RemainingJumps += 1;
             }
+
+            // Resets airjump so player can get a token and imidiately airjump
+            if (!isGrounded && !canAirJump) canAirJump = true;
         }
     }
 
@@ -207,6 +216,6 @@ public class CharacterController2D : GameBehaviour {
     {
         // Default Values
         TotalJumps = 2;
-        RemainingJumps = TotalJumps - 1;
+        RemainingJumps = TotalJumps;
     }
 }
