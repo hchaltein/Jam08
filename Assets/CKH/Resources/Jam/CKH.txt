@@ -7,4 +7,4 @@ CKH
 	Entry Identifier
 CKH
 	Scenes Needed:
-JumpMaze,Jam_08_lvl_01,030 - FinalLevel2,040 - FinalLevel3,050 - FinalLevel4
+CKH00,CKH01,CKH02,CKH03,CKH04

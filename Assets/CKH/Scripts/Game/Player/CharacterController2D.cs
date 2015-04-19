@@ -35,6 +35,8 @@ public class CharacterController2D : GameBehaviour {
 
     Collider2D[] dumbColliders = new Collider2D[1];
 
+    public int Lives; 
+
     protected override void Awake()
     {
         base.Awake();
@@ -43,7 +45,39 @@ public class CharacterController2D : GameBehaviour {
 
         ResetMultipleJump();
 
+
+
+        //Chek if this is the correct level
+        //Freeze time
+        Time.timeScale = 0;
+
+        int NextLevel = Mathf.FloorToInt(((CycleManager.Instance.FourthDigit) / 2));
+        
+        if (Application.loadedLevelName != "CKH0" + Mathf.Ceil(((CycleManager.Instance.FourthDigit) / 2)).ToString())
+        {
+            if (NextLevel >=5) NextLevel = 4;
+
+            Application.LoadLevel("CKH0" + NextLevel.ToString());
+        }
+            
+
+
+        // Adjust Speed
+        Time.timeScale = 0.6f + (CycleManager.Instance.FirstDigit / 10f);
+
+
+
     }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        Lives = CycleManager.Instance.ThirdDigit + 1;
+    }
+
+
+
 
 	protected override void FixedUpdate () 
     {
@@ -112,21 +146,24 @@ public class CharacterController2D : GameBehaviour {
     {
         base.Update();
 
+        if(Lives <= 0 || CycleManager.Instance.TimeLeft <= 0.04f)
+        {
+            // If player Dies, go to the next Jam.
+
+            CycleManager.Instance.FirstDigit = (int)(Time.timeScale * 10) -6;
+            CycleManager.Instance.SecondDigit = TotalJumps -1;
+            CycleManager.Instance.ThirdDigit = Lives;
+            CycleManager.Instance.FourthDigit = ((int)Application.loadedLevelName.ToCharArray()[4]);
+
+            CycleManager.Instance.AdvanceToNext();
+        }
+
         if (Input.GetButtonDown("Fire1"))
         {
             transform.parent = null;
 			rigidbody2D.WakeUp();
 			World.ShiftDimension();
         }
-
-	/*	if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-			transform.parent = null;
-			rigidbody2D.WakeUp();
-			World.ShiftTo(Dimensions.Green);
-        }
-    */
-
         
         if ((isGrounded || canAirJump && AirJumpEnabled) && Input.GetButtonDown("Jump"))
         {
@@ -176,19 +213,23 @@ public class CharacterController2D : GameBehaviour {
         {
             World.LoadCheckpoint();
             ResetMultipleJump();
+            Lives--;
         }
 
 		if (behaviour.GetType() == typeof(Spike))
 		{
 			World.LoadCheckpoint();
             ResetMultipleJump();
+            Lives--;
 		}
 
 		if (behaviour.GetType() == typeof(FallingPlatform))
 		{
 			World.LoadCheckpoint();
             ResetMultipleJump();
+            Lives--;
 		}
+
         if (behaviour.GetType() == typeof(CollectableDoubleJump))
         {
             if (!AirJumpEnabled) AirJumpEnabled = true;
@@ -216,7 +257,9 @@ public class CharacterController2D : GameBehaviour {
     void ResetMultipleJump()
     {
         // Default Values
-        TotalJumps = 2;
+        TotalJumps = CycleManager.Instance.SecondDigit +1;
+        if (TotalJumps < 2) TotalJumps = 2;
+
         RemainingJumps = TotalJumps;
     }
 }
