@@ -3,14 +3,17 @@ using System.Collections;
 
 public class GoToLevel : MonoBehaviour
 {
-	public int LevelNumber;
+	public string LevelNumber;
 
 	void OnCollisionEnter2D(Collision2D coll)
 	{
+
 		if (coll.gameObject.name == "Player") 
 		{
-			Application.LoadLevel(LevelNumber);
-			World.ResetWorld();
+            /*Application.LoadLevel("CKH0" + LevelNumber);
+			World.ResetWorld();*/
+
+            CycleManager.Instance.AdvanceToNext();
 		}
 	}
 }
