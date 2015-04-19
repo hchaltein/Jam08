@@ -38,9 +38,7 @@ public class CharacterController2D : GameBehaviour {
 
         animator = GetComponent<Animator>();
 
-        // Default Values
-        TotalJumps = 2;
-        RemainingJumps = TotalJumps - 1;
+        ResetMultipleJump();
 
     }
 
@@ -170,16 +168,19 @@ public class CharacterController2D : GameBehaviour {
         if (behaviour.GetType() == typeof(AbysmalPit))
         {
             World.LoadCheckpoint();
+            ResetMultipleJump();
         }
 
 		if (behaviour.GetType() == typeof(Spike))
 		{
 			World.LoadCheckpoint();
+            ResetMultipleJump();
 		}
 
 		if (behaviour.GetType() == typeof(FallingPlatform))
 		{
 			World.LoadCheckpoint();
+            ResetMultipleJump();
 		}
         if (behaviour.GetType() == typeof(CollectableDoubleJump))
         {
@@ -200,5 +201,12 @@ public class CharacterController2D : GameBehaviour {
     {
         Gizmos.color = Color.magenta;
         Gizmos.DrawLine(transform.position + (Vector3)handA + new Vector3(0, 0, -2), transform.position + (Vector3)handB + new Vector3(0, 0, -2));
+    }
+
+    void ResetMultipleJump()
+    {
+        // Default Values
+        TotalJumps = 2;
+        RemainingJumps = TotalJumps - 1;
     }
 }
