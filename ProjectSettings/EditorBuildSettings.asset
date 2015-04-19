@@ -20,7 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Jam/040 - FinalLevel3.unity
   - enabled: 1
-    path: Assets/Scenes/Levels/050 - FinalLevel4.unity
+    path: Assets/Scenes/Jam/050 - FinalLevel4.unity
   - enabled: 1
     path: Assets/Scenes/Levels/070 - FinalLevel6.unity
   - enabled: 1
