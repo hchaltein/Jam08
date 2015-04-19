@@ -1,0 +1,10 @@
+	Jam Entry
+1.05
+	Team Name
+CKH
+	Entry Name
+CKH
+	Entry Identifier
+CKH
+	Scenes Needed:
+JumpMaze,Jam_08_lvl_01,030 - FinalLevel2,040 - FinalLevel3,050 - FinalLevel4
