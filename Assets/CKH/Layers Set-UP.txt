@@ -1,0 +1,5 @@
+User Layer 8		Player
+User Layer 9		Ground
+User Layer 10		Wall
+User Layer 11		Back
+User Layer 12		Front
